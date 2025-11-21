@@ -92,7 +92,8 @@ std::unique_ptr<Pass> createSwapToLowerCxCxCxPass();
 
 /// 16
 std::unique_ptr<Pass> createSwapToUpperCxCxCxPass();
-
+/// 17
+std::unique_ptr<Pass> createHToRzXRzPass();
 } // namespace mqss::opt
 
 // Declarative passes

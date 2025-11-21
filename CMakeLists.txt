@@ -217,18 +217,12 @@ add_library(MQSS::SupportQuake ALIAS SupportQuake)
 add_library(MQSS::Optimizer ALIAS Optimizer)
 add_library(MQSS::Interfaces ALIAS Interfaces)
 
-# add pass selector ai
-if (BUILD_MLIR_PASSES_AI)
-    add_subdirectory(AI)
-endif ()
+
 
 # add tests
-if (BUILD_MLIR_PASSES_TESTS)
     enable_testing()
     include(GoogleTest)
     add_subdirectory(tests)
-endif ()
-
 # add documentation
 if (BUILD_MLIR_PASSES_DOCS)
     add_subdirectory(docs)

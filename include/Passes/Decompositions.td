@@ -80,4 +80,7 @@ def SwapToUpperCxCxCx : Pass<"SwapToUpperCxCxCx"> {
   let summary = "Decomposition pass of Swap by Cx Cx Cx gates";
   let constructor = "mqss::opt::createSwapToUpperCxCxCxPass()";
 }
-
+def HToRzXRz: Pass <"HToRzXRz"> {
+let summary = "Decomposition pass of H To Rz(pi) X Rz(pi/2) ";
+let constructor = "mqss::opt::createHToRzXRzPass()";
+}

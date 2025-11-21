@@ -19,8 +19,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Required dirs (reuse env if set)
-MLIR_DIR="${MLIR_DIR:-/usr/local/llvm/lib/cmake/mlir}"
-LLVM_DIR="${LLVM_DIR:-/usr/local/llvm/lib/cmake/llvm}"
+MLIR_DIR="${MLIR_DIR:-/usr/lib/llvm-16/lib/cmake/mlir}"
+LLVM_DIR="${LLVM_DIR:-/usr/lib/llvm-16/lib/cmake/llvm}"
 INSTALL_DIR="${INSTALL_PATH:-$HOME/.passes}"
 BUILD_DIR="${CURRENT_DIR}/build"
 CUDAQ_DIR="${BUILD_DIR}/_deps/cuda-quantum"

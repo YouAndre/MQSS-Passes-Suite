@@ -30,7 +30,7 @@ public:
   }
 
   void operationsOnQuantumKernel(FuncOp kernel) override {
-    this->wasApplied->store(false);
+        this->wasApplied->store(false);
     kernel.walk([&](Operation *op) {
       auto hOp2 = dyn_cast_or_null<quake::HOp>(*op);
       if (!hOp2
