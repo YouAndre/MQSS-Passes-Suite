@@ -92,8 +92,43 @@ std::unique_ptr<Pass> createSwapToLowerCxCxCxPass();
 
 /// 16
 std::unique_ptr<Pass> createSwapToUpperCxCxCxPass();
-/// 17
+/// 17 x
 std::unique_ptr<Pass> createHToRzXRzPass();
+/// 18 x
+std::unique_ptr<Pass> createXToRxPass();
+/// 18 x
+std::unique_ptr<Pass> createYToRyPass();
+/// 19 x
+std::unique_ptr<Pass> createZToRzPass();
+/// 20 x
+std::unique_ptr<Pass> createSToRzPass();
+/// 21 x
+std::unique_ptr<Pass> createSdgToRzPass();
+/// 22 x
+std::unique_ptr<Pass> createTToRzPass();
+/// 23 x
+std::unique_ptr<Pass> createR1ToRzPass();
+/// 24
+std::unique_ptr<Pass> createU2ToRzRyRzPass();
+/// 25 x
+std::unique_ptr<Pass> createU3ToRzRyRzPass();
+/// 26 x
+std::unique_ptr<Pass> createRyToRzRyRzPass();
+/// 27 x
+std::unique_ptr<Pass> createCyToSCxSdgPass();
+/// 28 x
+std::unique_ptr<Pass> createRzToU3Pass();
+/// 29 x
+std::unique_ptr<Pass> createCRyToRzCRxRzPass();
+/// 30 x
+std::unique_ptr<Pass> createCRzToRzCxRzCxPass();
+/// 31 x
+std::unique_ptr<Pass> createCRzToCu3Pass();
+
+
+
+
+
 } // namespace mqss::opt
 
 // Declarative passes

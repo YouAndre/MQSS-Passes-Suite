@@ -154,7 +154,12 @@ std::unique_ptr<Pass> createXHZToHPass();
 
 /// 35
 std::unique_ptr<Pass> createZHXToHPass();
-
+/// 36 <TODO> x
+std::unique_ptr<Pass> createR1R1ToR1Pass();
+/// 37 ?
+std::unique_ptr<Pass> createU2U2ToU2Pass();
+/// 38 ?
+std::unique_ptr<Pass> createU3U3ToU3Pass();
 } // namespace mqss::opt
 
 // Declarative passes
