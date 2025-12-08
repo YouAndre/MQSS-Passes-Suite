@@ -18,7 +18,7 @@ namespace mqss::opt {
 using namespace mlir;
 using mlir::arith::ConstantOp;
 namespace {
-class HToRzXRz final : public BaseMQSSPass<TToRz>, public AppliedCheckPass {
+class TToRz final : public BaseMQSSPass<TToRz>, public AppliedCheckPass {
 public:
   MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(TToRz)
 
@@ -44,17 +44,13 @@ return mlirBuilder.create<ConstantOp>(loc, parameter);
       }
       //hop->printing().debug("Decomposing H gate into Rz-Rx-Rz sequence");
       //Qqubit target_qubit = targets[0];
-      
-      OpBuilder mlirBuilder(kernel.getContext());
-      mlirBuilder.setInsertionPoint(RzOp);
+      IRRewriter rewriter(tOp->getContext());
+      rewriter.setInsertionPoint(tOp);
       Location loc = tOp.getLoc();
       auto target_qubit = tOp.getTargets();
-      auto constant_op_rz = mqss::support::quakeDialect::createFloatValue(mlirBuilder,loc, M_PI_4);
+      auto constant_op_rz = mqss::support::quakeDialect::createFloatValue(rewriter,loc, M_PI_4);
       //createFloats((- M_PI), mlirBuilder, loc);
-      mlirBuilder.create<quake::RyOp>(loc, false, ValueRange{constant_op_rz},
-                                      ValueRange{}, target_qubit);
-                                      
-      IRRewriter rewriter(tOp->getContext());
+      rewriter.create<quake::RzOp>(loc, false, constant_op_rz, ValueRange{}, target_qubit);
       rewriter.eraseOp(tOp);
       this->wasApplied->store(true);                                
 

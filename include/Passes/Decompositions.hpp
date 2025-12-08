@@ -113,18 +113,19 @@ std::unique_ptr<Pass> createU2ToRzRyRzPass();
 /// 25 x
 std::unique_ptr<Pass> createU3ToRzRyRzPass();
 /// 26 x
-std::unique_ptr<Pass> createRyToRzRyRzPass();
+std::unique_ptr<Pass> createRyToRzRxRzPass();
 /// 27 x
 std::unique_ptr<Pass> createCyToSCxSdgPass();
 /// 28 x
 std::unique_ptr<Pass> createRzToU3Pass();
 /// 29 x
-std::unique_ptr<Pass> createCRyToRzCRxRzPass();
+std::unique_ptr<Pass> createCryToRzCrxRzPass();
 /// 30 x
-std::unique_ptr<Pass> createCRzToRzCxRzCxPass();
+std::unique_ptr<Pass> createCrzToRzCxRzCxPass();
 /// 31 x
-std::unique_ptr<Pass> createCRzToCu3Pass();
-
+std::unique_ptr<Pass> createCrzToCu3Pass();
+/// 32 x
+std::unique_ptr<Pass> createU2ToU3Pass();
 
 
 

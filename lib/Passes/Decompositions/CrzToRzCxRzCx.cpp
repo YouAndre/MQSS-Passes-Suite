@@ -19,15 +19,15 @@ using namespace mlir;
 
 namespace {
 
-class CrzToHCrxH final : public BaseMQSSPass<CrzToHCrxH>,
+class CrzToRzCxRzCx final : public BaseMQSSPass<CrzToRzCxRzCx>,
                          public AppliedCheckPass {
 public:
-  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CrzToHCrxH)
+  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CrzToRzCxRzCx)
 
-  StringRef getArgument() const override { return "CrzToHCrxH"; }
+  StringRef getArgument() const override { return "CrzToRzCxRzCx"; }
 
   StringRef getDescription() const override {
-    return "Decomposition pass of Crz by H, Crx, and H";
+    return "Decomposition pass of Crz by Rz, Cx, Rz, and Cx";
   }
 
   void operationsOnQuantumKernel(func::FuncOp kernel) override {
@@ -50,16 +50,16 @@ public:
       double angle = params[0];
       // double angle_1 = params[1];
 
-      auto constant_float_2 = mqss::support::quakeDialect::createFloatValue(
+      auto constant_float_1 = mqss::support::quakeDialect::createFloatValue(
           rewriter, loc, angle / 2);
-      auto constant_float__2 = mqss::support::quakeDialect::createFloatValue(
+      auto constant_float_2 = mqss::support::quakeDialect::createFloatValue(
           rewriter, loc, angle / -2);
 
-      rewriter.create<quake::RzOp>(loc, false, ValueRange{constant_float_2},
+      rewriter.create<quake::RzOp>(loc, false, ValueRange{constant_float_1},
                                    ValueRange{}, target);
       rewriter.setInsertionPointAfter(crzOp);
       rewriter.create<quake::XOp>(loc, control, target);
-      rewriter.create<quake::RzOp>(loc, false, ValueRange{constant_float__2},
+      rewriter.create<quake::RzOp>(loc, false, ValueRange{constant_float_2},
                                    ValueRange{}, target);
       rewriter.create<quake::XOp>(loc, control, target);
       rewriter.eraseOp(crzOp);
@@ -69,6 +69,6 @@ public:
 };
 } // namespace
 
-std::unique_ptr<Pass> mqss::opt::createCrzToHCrxHPass() {
-  return std::make_unique<CrzToHCrxH>();
+std::unique_ptr<Pass> mqss::opt::createCrzToRzCxRzCxPass() {
+  return std::make_unique<CrzToRzCxRzCx>();
 }

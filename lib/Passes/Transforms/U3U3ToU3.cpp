@@ -6,6 +6,8 @@
 #include "mlir/IR/Threading.h"
 #include "Support/Transforms/CommutateOperations.hpp"
 #include "mlir/Transforms/DialectConversion.h"
+#include <complex>
+#include <cmath>
 
 namespace mqss::opt {
 #define GEN_PASS_DEF_U3U3TOU3
@@ -55,16 +57,49 @@ public:
       if (u31Params.size() != 3 || u32Params.size() != 3) {
         return;
       }
-      double angle_0 = u31Params[0] + u32Params[0];
-      double angle_1 = u31Params[1] + u32Params[1];
-      double angle_2 = u31Params[2] + u32Params[2];
+      double theta1 = u31Params[0], phi1 = u31Params[1], lambda1 = u31Params[2];
+      double theta2 = u32Params[0], phi2 = u32Params[1], lambda2 = u32Params[2];
+
+    // Build SU(2) matrices
+      std::complex<double> i(0,1);
+      std::complex<double> m1[2][2] = {
+        {cos(theta1/2), -std::exp(i*lambda1)*sin(theta1/2)},
+        {std::exp(i*phi1)*sin(theta1/2), std::exp(i*(phi1+lambda1))*cos(theta1/2)}
+    };
+    std::complex<double> m2[2][2] = {
+        {cos(theta2/2), -std::exp(i*lambda2)*sin(theta2/2)},
+        {std::exp(i*phi2)*sin(theta2/2), std::exp(i*(phi2+lambda2))*cos(theta2/2)}
+    };
+
+    // Multiply matrices: r = m2 * m1
+    std::complex<double> r[2][2];
+    r[0][0] = m2[0][0]*m1[0][0] + m2[0][1]*m1[1][0];
+    r[0][1] = m2[0][0]*m1[0][1] + m2[0][1]*m1[1][1];
+    r[1][0] = m2[1][0]*m1[0][0] + m2[1][1]*m1[1][0];
+    r[1][1] = m2[1][0]*m1[0][1] + m2[1][1]*m1[1][1];
+
+    // Extract new U3 angles from resulting SU(2)
+    double theta, phi, lambda;
+
+    theta = 2.0 * std::acos(std::abs(r[0][0]));
+    double sinThetaOver2 = std::sin(theta/2.0);
+
+    if (std::abs(sinThetaOver2) < 1e-12) { // θ ≈ 0, degenerate
+        phi = 0;
+        lambda = std::arg(r[0][0]) + std::arg(r[1][1]);
+    } else {
+        lambda = std::arg(-r[0][1]/sinThetaOver2);
+        phi    = std::arg(r[1][0]/sinThetaOver2);
+    }
       IRRewriter rewriter(u3Op2->getContext());
       rewriter.setInsertionPointAfter(u3Op2);
       Location loc = u3Op1.getLoc();
       ValueRange targets = u3Op1.getTargets();
-      Value param_0 = createFloatValue(rewriter, loc, angle_0);
-      Value param_1 = createFloatValue(rewriter, loc, angle_1);
-      Value param_2 = createFloatValue(rewriter, loc, angle_2);
+
+      Value param_0 = createFloatValue(rewriter, loc, theta);
+      Value param_1   = createFloatValue(rewriter, loc, phi);
+      Value param_2= createFloatValue(rewriter, loc, lambda);
+
       rewriter.create<quake::U3Op>(loc, ValueRange{param_0, param_1,param_2}, ValueRange{}, targets);
 
       rewriter.eraseOp(u3Op1);

@@ -215,10 +215,6 @@ def R1R1ToR1 : Pass<"R1R1ToR1"> {
   let constructor = "mqss::opt::createR1R1ToR1Pass()";
 }
 
-def U2U2ToU2 : Pass<"U2U2ToU2"> {
-  let summary = "Collapse 2 U2 rotations into a single U2";
-  let constructor = "mqss::opt::createU2U2ToU2Pass()";
-}
 
 def U3U3ToU3 : Pass<"U3U3ToU3"> {
   let summary = "Collapse 2 U3 rotations into a single U3";

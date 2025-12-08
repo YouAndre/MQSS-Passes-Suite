@@ -131,9 +131,9 @@ def U3ToRzRyRz : Pass<"U3ToRzRyRz"> {
   let constructor = "mqss::opt::createU3ToRzRyRzPass()";
 }
 
-def RyToRzRyRz : Pass<"RyToRzRyRz"> {
-  let summary = "Decomposition pass of Ry into Rz-Ry-Rz sequence";
-  let constructor = "mqss::opt::createRyToRzRyRzPass()";
+def RyToRzRxRz : Pass<"RyToRzRxRz"> {
+  let summary = "Decomposition pass of Ry into Rz-Rx-Rz sequence";
+  let constructor = "mqss::opt::createRyToRzRxRzPass()";
 }
 
 def CyToSCxSdg : Pass<"CyToSCxSdg"> {
@@ -146,17 +146,21 @@ def RzToU3 : Pass<"RzToU3"> {
   let constructor = "mqss::opt::createRzToU3Pass()";
 }
 
-def CRxToCRz : Pass<"CRxToCRz"> {
-  let summary = "Decomposition pass of CRx into CRz rotations";
-  let constructor = "mqss::opt::createCRxToCRzPass()";
+def CrxToHCRzH : Pass<"CrxToHCrzH"> {
+  let summary = "Decomposition pass of Crx into H Crz H rotations";
+  let constructor = "mqss::opt::createCrxToHCrzHPass()";
 }
 
-def CRyToRzCRxRz : Pass<"CRyToRzCRxRz"> {
-  let summary = "Decomposition pass of CRy into Rz-CRx-Rz sequence";
-  let constructor = "mqss::opt::createCRyToRzCRxRzPass()";
+def CryToRzCrxRz : Pass<"CryToRzCrxRz"> {
+  let summary = "Decomposition pass of Cry into Rz-CRx-Rz sequence";
+  let constructor = "mqss::opt::createCryToRzCrxRzPass()";
 }
 
-def CRzToRzCxRzCx : Pass<"CRzToRzCxRzCx"> {
-  let summary = "Decomposition pass of CRz into Rz-CX-Rz-CX sequence";
-  let constructor = "mqss::opt::createCRzToRzCxRzCxPass()";
+def CrzToRzCxRzCx : Pass<"CrzToRzCxRzCx"> {
+  let summary = "Decomposition pass of Crz into Rz-CX-Rz-CX sequence";
+  let constructor = "mqss::opt::createCrzToRzCxRzCxPass()";
+}
+def U2ToU3 : Pass<"U2ToU3"> {
+  let summary = "Decomposition pass of U2 into U3";
+  let constructor = "mqss::opt::createU2ToU3Pass()";
 }

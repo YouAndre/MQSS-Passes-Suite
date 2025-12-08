@@ -17,12 +17,12 @@ namespace mqss::opt {
 using namespace mlir;
 
 namespace {
-class CyToLowerSCySdg final : public BaseMQSSPass<CyToLowerSCySdg>,
+class CyToSCxSdg final : public BaseMQSSPass<CyToSCxSdg>,
                             public AppliedCheckPass {
 public:
-  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CyToLowerSCySdg)
+  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CyToSCxSdg)
 
-  StringRef getArgument() const override { return "CyToLowerSCySdg"; }
+  StringRef getArgument() const override { return "CyToSCxSdg"; }
 
   StringRef getDescription() const override {
     return "Decomposition pass of two-qubits Cy by S, Cx, and Sdg";
@@ -52,6 +52,6 @@ public:
 };
 } // namespace
 
-std::unique_ptr<Pass> mqss::opt::createCxToLowerHCzHPass() {
-  return std::make_unique<CyToLowerSCySdg>();
+std::unique_ptr<Pass> mqss::opt::createCyToSCxSdgPass() {
+  return std::make_unique<CyToSCxSdg>();
 }

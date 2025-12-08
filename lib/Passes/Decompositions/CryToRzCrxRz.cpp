@@ -46,8 +46,8 @@ public:
       Value param = cryOp.getParameters()[0];
       Location loc = cryOp.getLoc();
       rewriter.setInsertionPointAfter(cryOp);
-      auto constant_op_ry = mqss::support::quakeDialect::createFloatValue(mlirBuilder,loc, -M_PI_2);
-      auto constant_op_ry2 = mqss::support::quakeDialect::createFloatValue(mlirBuilder,loc, M_PI_2);
+      auto constant_op_ry = mqss::support::quakeDialect::createFloatValue(rewriter,loc, -M_PI_2);
+      auto constant_op_ry2 = mqss::support::quakeDialect::createFloatValue(rewriter,loc, M_PI_2);
       rewriter.create<quake::RzOp>(loc, false, ValueRange{constant_op_ry},
                                         ValueRange{}, target);
       rewriter.create<quake::RxOp>(loc, false, param, control, target);

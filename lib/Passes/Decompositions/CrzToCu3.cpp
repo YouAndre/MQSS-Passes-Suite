@@ -37,7 +37,7 @@ public:
       if (!rzOp
           || rzOp.isAdj()
           || rzOp.getTargets().size() != 1
-          || rzOp.getControls()!=1
+          || rzOp.getControls().size()!=1
           || rzOp.getParameters().size() != 1) {
         return;
       }
@@ -58,6 +58,6 @@ public:
 
 } // namespace
 
-std::unique_ptr<Pass> mqss::opt::createCrzToU3Pass() {
+std::unique_ptr<Pass> mqss::opt::createCrzToCu3Pass() {
   return std::make_unique<CrzToU3>();
 }

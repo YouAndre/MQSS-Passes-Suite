@@ -17,7 +17,7 @@ namespace mqss::opt {
 using namespace mlir;
 
 namespace {
-class SdgToSSS final : public BaseMQSSPass<SdgToRz>, public AppliedCheckPass {
+class SdgToRz final : public BaseMQSSPass<SdgToRz>, public AppliedCheckPass {
 public:
   MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(SdgToRz)
 
@@ -37,17 +37,12 @@ public:
           || !sOp.getControls().empty()) {
         return;
       }
-
-      OpBuilder mlirBuilder(kernel.getContext());
-      mlirBuilder.setInsertionPoint(RzOp);
-      Location loc = sOp.getLoc();
-      auto target_qubit = sOp.getTargets();auto constant_op_rz = mqss::support::quakeDialect::createFloatValue(mlirBuilder,loc, -M_PI_2);
-      //createFloats((- M_PI), mlirBuilder, loc);
-      mlirBuilder.create<quake::RzOp>(loc, false, ValueRange{constant_op_rz},
-                                      ValueRange{}, target_qubit);
-                                      
-                                      
       IRRewriter rewriter(sOp->getContext());
+      Location loc = sOp.getLoc();
+      auto target_qubit = sOp.getTargets();
+      auto constant_op_rz = mqss::support::quakeDialect::createFloatValue(rewriter,loc, -M_PI_2);
+      rewriter.setInsertionPointAfter(sOp);                            
+      rewriter.create<quake::RzOp>(loc, false, constant_op_rz, ValueRange{}, target_qubit);
       rewriter.eraseOp(sOp);
       this->wasApplied->store(true);                                
 

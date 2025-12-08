@@ -50,8 +50,8 @@ public:
           || r1Op1.getParameters().size() != 1) {
         return;
       }
-      auto r1Params = getOperationParameters(r1Op1);
-      auto r1Params = getOperationParameters(r1Op2);
+      auto r11Params = getOperationParameters(r1Op1);
+      auto r12Params = getOperationParameters(r1Op2);
       if (r11Params.size() != 1 || r12Params.size() != 1) {
         return;
       }

@@ -20,14 +20,14 @@ using namespace mlir;
 
 namespace {
 
-class CrzToCu3 final : public BaseMQSSPass<CrzToCu3>, public AppliedCheckPass {
+class RzToU3 final : public BaseMQSSPass<RzToU3>, public AppliedCheckPass {
 public:
-  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CrzToCu3)
+  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(RzToU3)
 
-  StringRef getArgument() const override { return "CrzToCu3"; }
+  StringRef getArgument() const override { return "RzToU3"; }
 
   StringRef getDescription() const override {
-    return "Decomposition pass that replaces Crz by Cu3";
+    return "Decomposition pass that replaces Rz by U3";
   }
 
   void operationsOnQuantumKernel(func::FuncOp kernel) override {
@@ -44,13 +44,12 @@ public:
 
       IRRewriter rewriter(rzOp->getContext());
       Value target = rzOp.getTargets()[0];
-      Value control = rzOp.getControls()[0];
       Value param = rzOp.getParameters()[0];
       Location loc = rzOp.getLoc();
       auto constant_0 = mqss::support::quakeDialect::createFloatValue( rewriter, loc,0.0);
       
       rewriter.setInsertionPointAfter(rzOp);
-      rewriter.create<quake::U3Op>(loc, ValueRange{constant_0, constant_0,param}, ValueRange{}, control,target);
+      rewriter.create<quake::U3Op>(loc, ValueRange{constant_0, constant_0,param}, ValueRange{},target);
       rewriter.eraseOp(rzOp);
       this->wasApplied->store(true);
     });
@@ -59,6 +58,6 @@ public:
 
 } // namespace
 
-std::unique_ptr<Pass> mqss::opt::createCrzToCu3Pass() {
-  return std::make_unique<CrzToCu3>();
+std::unique_ptr<Pass> mqss::opt::createRzToU3Pass() {
+  return std::make_unique<RzToU3>();
 }

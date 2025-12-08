@@ -17,48 +17,49 @@ namespace mqss::opt {
 using namespace mlir;
 
 namespace {
-class U3ToRzRyRz final : public BaseMQSSPass<U3ToRzRyRz>, public AppliedCheckPass {
+class U2ToRzRyRz final : public BaseMQSSPass<U2ToRzRyRz>, public AppliedCheckPass {
 public:
-  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(U3ToRzRyRz)
+  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(U2ToRzRyRz)
 
-  StringRef getArgument() const override { return "U3ToRzRyRz"; }
+  StringRef getArgument() const override { return "U2ToRzRyRz"; }
 
   StringRef getDescription() const override {
-    return "Decompose U3 gate to Rz,Ry, Rz gates";
+    return "Decompose U2 gate to Rz,Ry, Rz gates";
   }
 
   void operationsOnQuantumKernel(FuncOp kernel) override {
     this->wasApplied->store(false);
     kernel.walk([&](Operation *op) {
-      auto u3Op2 = dyn_cast_or_null<quake::U3Op>(*op);
-      if (!u3Op2
-          || u3Op2.getTargets().size() != 1
-          || !u3Op2.getControls().empty()
-          || u3Op2.getParameters().size() != 3) {
+      auto u2Op = dyn_cast_or_null<quake::U2Op>(*op);
+      if (!u2Op
+          || u2Op.getTargets().size() != 1
+          || !u2Op.getControls().empty()
+          || u2Op.getParameters().size() != 2) {
         return;
       }
       
-      auto params = u3Op2.getParameters();
-      //auto u31Params = getOperationParameters(u3Op2);
+      auto params = u2Op.getParameters();
+      //auto u31Params = getOperationParameters(u2Op);
       
       if (params.size() != 3) {
         return;
       }
       Value angle_0 = params[0];
       Value angle_1 = params[1];
-      Value angle_2 = params[2];
-      IRRewriter rewriter(u3Op2->getContext());
-      rewriter.setInsertionPointAfter(u3Op2);
-      Location loc = u3Op2.getLoc();
-      ValueRange targets = u3Op2.getTargets();
-      
-      rewriter.create<quake::RzOp>(loc, false, ValueRange{angle_2},
+
+      IRRewriter rewriter(u2Op->getContext());
+      rewriter.setInsertionPointAfter(u2Op);
+      Location loc = u2Op.getLoc();
+      ValueRange targets = u2Op.getTargets();
+
+      auto constant_0 = mqss::support::quakeDialect::createFloatValue( rewriter, loc,M_PI_2);
+      rewriter.create<quake::RzOp>(loc, false, ValueRange{angle_0},
                                       ValueRange{}, targets);
-      rewriter.create<quake::RyOp>(loc, false, ValueRange{angle_0},
+      rewriter.create<quake::RyOp>(loc, false, ValueRange{constant_0},
                                       ValueRange{}, targets);
       rewriter.create<quake::RzOp>(loc, false, ValueRange{angle_1},
                                       ValueRange{}, targets);
-      rewriter.eraseOp(u3Op2);
+      rewriter.eraseOp(u2Op);
       this->wasApplied->store(true);
     });
   }
@@ -66,6 +67,6 @@ public:
 
 } // namespace
 
-std::unique_ptr<Pass> mqss::opt::createU3ToRzRyRzPass() {
-  return std::make_unique<U3ToRzRyRz>();
+std::unique_ptr<Pass> mqss::opt::createU2ToRzRyRzPass() {
+  return std::make_unique<U2ToRzRyRz>();
 }
