@@ -41,7 +41,7 @@ public:
       auto params = u2Op.getParameters();
       //auto u31Params = getOperationParameters(u2Op);
       
-      if (params.size() != 3) {
+      if (params.size() != 2) {
         return;
       }
       Value angle_0 = params[0];

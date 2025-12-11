@@ -126,8 +126,8 @@ std::unique_ptr<Pass> createCrzToRzCxRzCxPass();
 std::unique_ptr<Pass> createCrzToCu3Pass();
 /// 32 x
 std::unique_ptr<Pass> createU2ToU3Pass();
-
-
+/// 33 x
+std::unique_ptr<Pass> createTdgToRzPass();
 
 
 } // namespace mqss::opt

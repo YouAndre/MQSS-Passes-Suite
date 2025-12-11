@@ -8,6 +8,7 @@
 #include "mlir/Transforms/DialectConversion.h"
 #include <complex>
 #include <cmath>
+#include <mlir/IR/ValueRange.h>
 
 namespace mqss::opt {
 #define GEN_PASS_DEF_U3U3TOU3
@@ -100,7 +101,7 @@ public:
       Value param_1   = createFloatValue(rewriter, loc, phi);
       Value param_2= createFloatValue(rewriter, loc, lambda);
 
-      rewriter.create<quake::U3Op>(loc, ValueRange{param_0, param_1,param_2}, ValueRange{}, targets);
+      rewriter.create<quake::U3Op>(loc, ValueRange{param_0, param_1,param_2}, ValueRange{}, ValueRange{targets});
 
       rewriter.eraseOp(u3Op1);
       rewriter.eraseOp(u3Op2);

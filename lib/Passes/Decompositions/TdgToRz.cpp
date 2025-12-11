@@ -9,7 +9,7 @@
 
 // Include auto-generated pass registration
 namespace mqss::opt {
-#define GEN_PASS_DEF_YTORY
+#define GEN_PASS_DEF_TTORZ
 
 // NOLINTNEXTLINE
 #include "Passes/Decompositions.h.inc"
@@ -18,14 +18,14 @@ namespace mqss::opt {
 using namespace mlir;
 using mlir::arith::ConstantOp;
 namespace {
-class YToRy final : public BaseMQSSPass<YToRy>, public AppliedCheckPass {
+class TdgToRz final : public BaseMQSSPass<TdgToRz>, public AppliedCheckPass {
 public:
-  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(YToRy)
+  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(TdgToRz)
 
-  StringRef getArgument() const override { return "XToRx"; }
+  StringRef getArgument() const override { return "TdgToRz"; }
 
   StringRef getDescription() const override {
-    return "Decomposition pass of Y by Ry";
+    return "Decomposition pass of Tdg by Rz";
   }
 
   auto createFloats(double value, OpBuilder &mlirBuilder, Location loc) {
@@ -38,24 +38,24 @@ return mlirBuilder.create<ConstantOp>(loc, parameter);
   void operationsOnQuantumKernel(func::FuncOp kernel) override {
     this->wasApplied->store(false);
     kernel.walk([&](Operation *op) {
-      auto yOp = dyn_cast_or_null<quake::YOp>(*op);
-      if (!yOp|| yOp.isAdj()
-        || yOp.getTargets().size() != 1
-        || !yOp.getControls().empty()) {
+      auto tOp = dyn_cast_or_null<quake::TOp>(*op);
+      if (!tOp      
+        || !tOp.isAdj()
+        || tOp.getTargets().size() != 1
+        || !tOp.getControls().empty()) {
+
         return;
       }
       //hop->printing().debug("Decomposing H gate into Rz-Rx-Rz sequence");
       //Qqubit target_qubit = targets[0];
-      IRRewriter rewriter(yOp->getContext());
-
-      rewriter.setInsertionPoint(yOp);
-      Location loc = yOp.getLoc();
-      auto target_qubit = yOp.getTargets();
-      auto constant_op_ry = mqss::support::quakeDialect::createFloatValue(rewriter,loc, -M_PI);
+      IRRewriter rewriter(tOp->getContext());
+      rewriter.setInsertionPoint(tOp);
+      Location loc = tOp.getLoc();
+      auto target_qubit = tOp.getTargets();
+      auto constant_op_rz = mqss::support::quakeDialect::createFloatValue(rewriter,loc,- M_PI_4);
       //createFloats((- M_PI), mlirBuilder, loc);
-      rewriter.create<quake::RyOp>(loc, false, ValueRange{constant_op_ry},
-                                      ValueRange{}, target_qubit);
-      rewriter.eraseOp(yOp);
+      rewriter.create<quake::RzOp>(loc, false, constant_op_rz, ValueRange{}, target_qubit);
+      rewriter.eraseOp(tOp);
       this->wasApplied->store(true);                                
 
     });
@@ -64,6 +64,6 @@ return mlirBuilder.create<ConstantOp>(loc, parameter);
 
 } // namespace
 
-std::unique_ptr<Pass> mqss::opt::createYToRyPass() {
-  return std::make_unique<YToRy>();
+std::unique_ptr<Pass> mqss::opt::createTdgToRzPass() {
+  return std::make_unique<TdgToRz>();
 }

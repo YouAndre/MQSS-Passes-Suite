@@ -164,3 +164,7 @@ def U2ToU3 : Pass<"U2ToU3"> {
   let summary = "Decomposition pass of U2 into U3";
   let constructor = "mqss::opt::createU2ToU3Pass()";
 }
+def TdgToRz : Pass<"TdgToRz"> {
+  let summary = "Decomposition pass of Tdg into Rz";
+  let constructor = "mqss::opt::createTdgToRzPass()";
+}

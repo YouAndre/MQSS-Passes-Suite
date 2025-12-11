@@ -5,6 +5,7 @@
 #include "mlir/IR/Threading.h"
 #include "mlir/Rewrite/FrozenRewritePatternSet.h"
 #include "mlir/Transforms/DialectConversion.h"
+#include <mlir/IR/ValueRange.h>
 
 // Include auto-generated pass registration
 namespace mqss::opt {
@@ -40,8 +41,9 @@ public:
       IRRewriter rewriter(sOp->getContext());
       Location loc = sOp.getLoc();
       auto target_qubit = sOp.getTargets();
+      rewriter.setInsertionPointAfter(sOp);  
       auto constant_op_rz = mqss::support::quakeDialect::createFloatValue(rewriter,loc, -M_PI_2);
-      rewriter.setInsertionPointAfter(sOp);                            
+                          
       rewriter.create<quake::RzOp>(loc, false, constant_op_rz, ValueRange{}, target_qubit);
       rewriter.eraseOp(sOp);
       this->wasApplied->store(true);                                

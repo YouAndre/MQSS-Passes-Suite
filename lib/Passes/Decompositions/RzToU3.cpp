@@ -46,10 +46,11 @@ public:
       Value target = rzOp.getTargets()[0];
       Value param = rzOp.getParameters()[0];
       Location loc = rzOp.getLoc();
+
+      rewriter.setInsertionPointAfter(rzOp);
       auto constant_0 = mqss::support::quakeDialect::createFloatValue( rewriter, loc,0.0);
       
-      rewriter.setInsertionPointAfter(rzOp);
-      rewriter.create<quake::U3Op>(loc, ValueRange{constant_0, constant_0,param}, ValueRange{},target);
+      rewriter.create<quake::U3Op>(loc, ValueRange{constant_0, constant_0,param}, ValueRange{},ValueRange{target});
       rewriter.eraseOp(rzOp);
       this->wasApplied->store(true);
     });

@@ -6,6 +6,7 @@
 #include "mlir/Rewrite/FrozenRewritePatternSet.h"
 #include "mlir/Transforms/DialectConversion.h"
 #include "mlir_utils.hpp"
+#include <mlir/IR/ValueRange.h>
 
 // Include auto-generated pass registration
 namespace mqss::opt {
@@ -45,7 +46,7 @@ public:
       Value target = crzOp.getTargets()[0];
       Value param = crzOp.getParameters()[0];
       Location loc = crzOp.getLoc();
-
+      rewriter.setInsertionPointAfter(crzOp);
       std::vector<double> params = mqss::support::quakeDialect::getOperationParameters(crzOp);
       double angle = params[0];
       // double angle_1 = params[1];
@@ -54,14 +55,13 @@ public:
           rewriter, loc, angle / 2);
       auto constant_float_2 = mqss::support::quakeDialect::createFloatValue(
           rewriter, loc, angle / -2);
-
-      rewriter.create<quake::RzOp>(loc, false, ValueRange{constant_float_1},
-                                   ValueRange{}, target);
-      rewriter.setInsertionPointAfter(crzOp);
-      rewriter.create<quake::XOp>(loc, control, target);
-      rewriter.create<quake::RzOp>(loc, false, ValueRange{constant_float_2},
-                                   ValueRange{}, target);
-      rewriter.create<quake::XOp>(loc, control, target);
+      rewriter.create<quake::RzOp>(loc, false, constant_float_1,
+                                   ValueRange{}, ValueRange{target});
+      
+      rewriter.create<quake::XOp>(loc, ValueRange{control}, ValueRange{target});
+      rewriter.create<quake::RzOp>(loc, false, constant_float_2,
+                                   ValueRange{}, ValueRange{target});
+      rewriter.create<quake::XOp>(loc, ValueRange{control}, ValueRange{target});
       rewriter.eraseOp(crzOp);
       this->wasApplied->store(true);
     });

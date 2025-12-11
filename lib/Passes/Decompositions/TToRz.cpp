@@ -39,7 +39,11 @@ return mlirBuilder.create<ConstantOp>(loc, parameter);
     this->wasApplied->store(false);
     kernel.walk([&](Operation *op) {
       auto tOp = dyn_cast_or_null<quake::TOp>(*op);
-      if (!tOp) {
+      if (!tOp      
+        || tOp.isAdj()
+        || tOp.getTargets().size() != 1
+        || !tOp.getControls().empty()) {
+        
         return;
       }
       //hop->printing().debug("Decomposing H gate into Rz-Rx-Rz sequence");
