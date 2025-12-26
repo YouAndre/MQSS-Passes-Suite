@@ -82,4 +82,6 @@ createQASM3ToQuakePass(std::istringstream &qasmStream,
  `mlir::PassManager` to take effect on any given MLIR module.
  */
 std::unique_ptr<mlir::Pass> createQuakeToLinAlgPass();
+
+std::unique_ptr<mlir::Pass> createQuakeToFeaturesPass();
 } // namespace mqss::opt
