@@ -83,5 +83,4 @@ createQASM3ToQuakePass(std::istringstream &qasmStream,
  */
 std::unique_ptr<mlir::Pass> createQuakeToLinAlgPass();
 
-std::unique_ptr<mlir::Pass> createQuakeToFeaturesPass();
 } // namespace mqss::opt
