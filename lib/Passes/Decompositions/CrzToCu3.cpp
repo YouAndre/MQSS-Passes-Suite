@@ -43,13 +43,13 @@ public:
       }
 
       IRRewriter rewriter(rzOp->getContext());
+      rewriter.setInsertionPointAfter(rzOp);
       Value target = rzOp.getTargets()[0];
       Value param = rzOp.getParameters()[0];
       Value control = rzOp.getControls()[0];
       Location loc = rzOp.getLoc();
-      auto constant_0 = mqss::support::quakeDialect::createFloatValue( rewriter, loc,0.0);
+      Value constant_0 = mqss::support::quakeDialect::createFloatValue( rewriter, loc,0.0);
       
-      rewriter.setInsertionPointAfter(rzOp);
       rewriter.create<quake::U3Op>(loc, ValueRange{constant_0, constant_0,param}, control, target);
       rewriter.eraseOp(rzOp);
       this->wasApplied->store(true);
