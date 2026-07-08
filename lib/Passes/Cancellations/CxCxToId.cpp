@@ -53,8 +53,19 @@ public:
           = dyn_cast_or_null<quake::XOp>(*optional_cxOp1_onTarget);
       if (!cxOp1
           || cxOp1.getTargets().size() != 1
-          || cxOp1.getControls().size() != 1
-          || cxOp1.getControls()[0] != cxOp2.getControls()[0]) {
+          || cxOp1.getControls().size() != 1) {
+        return;
+      }
+      // Compare controls by qubit index rather than by SSA Value: each use
+      // of a qubit typically gets its own quake.extract_ref, so two
+      // references to the same physical qubit are rarely the same Value.
+      auto controlIdx1 = mqss::support::quakeDialect::
+          extractIndexFromQuakeExtractRefOp(
+              cxOp1.getControls()[0].getDefiningOp());
+      auto controlIdx2 = mqss::support::quakeDialect::
+          extractIndexFromQuakeExtractRefOp(
+              cxOp2.getControls()[0].getDefiningOp());
+      if (!controlIdx1 || !controlIdx2 || *controlIdx1 != *controlIdx2) {
         return;
       }
 

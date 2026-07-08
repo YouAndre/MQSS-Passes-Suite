@@ -54,7 +54,13 @@ namespace mqss::support::transforms {
         constexpr double pi = std::numbers::pi;
         constexpr double doublePi = 2 * pi;
         constexpr double epsilon = 1e-6;
-        return std::abs(std::fmod(angle, doublePi)) < epsilon;
+        double remainder = std::fmod(angle, doublePi);
+        if (remainder < 0) {
+            remainder += doublePi;
+        }
+        // remainder is now in [0, doublePi). Check distance to the nearest
+        // multiple of 2*pi, i.e. to either 0 or doublePi, not just to 0.
+        return remainder < epsilon || (doublePi - remainder) < epsilon;
     }
 
     /**

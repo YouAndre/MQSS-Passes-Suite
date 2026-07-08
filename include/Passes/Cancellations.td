@@ -69,3 +69,9 @@ def ZeroRzToId : Pass<"ZeroRzToId"> {
   let summary = "Remove Rz gates with zero angle";
   let constructor = "mqss::opt::createZeroRzToIdPass()";
 }
+
+def GeneralCancellations : Pass<"GeneralCancellations"> {
+  let summary = "Remove all cancellable gate pairs and zero-angle rotations "
+                "in a single pass";
+  let constructor = "mqss::opt::createGeneralCancellationsPass()";
+}

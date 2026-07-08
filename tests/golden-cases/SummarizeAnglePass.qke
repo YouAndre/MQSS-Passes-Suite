@@ -1,0 +1,36 @@
+module {
+  func.func @__nvqpp__mlirgen__testSummarizeAngle() attributes {"cudaq-entrypoint", "cudaq-kernel"} {
+    %cst = arith.constant 3.000000e+00 : f64
+    %cst_0 = arith.constant 5.000000e-02 : f64
+    %cst_1 = arith.constant 5.000000e-01 : f64
+    %cst_2 = arith.constant 1.000000e+00 : f64
+    %cst_3 = arith.constant 3.9269908169872414 : f64
+    %cst_4 = arith.constant 0.000000e+00 : f64
+    %cst_5 = arith.constant 3.1415926535897931 : f64
+    %0 = quake.alloca !quake.veq<4>
+    %1 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+    quake.rx (%cst_4) %1 : (f64, !quake.ref) -> ()
+    quake.ry (%cst_3) %1 : (f64, !quake.ref) -> ()
+    quake.rz (%cst_4) %1 : (f64, !quake.ref) -> ()
+    quake.r1 (%cst_5) %1 : (f64, !quake.ref) -> ()
+    %2 = quake.extract_ref %0[1] : (!quake.veq<4>) -> !quake.ref
+    quake.rx (%cst_2) %2 : (f64, !quake.ref) -> ()
+    quake.rz (%cst_1) %2 : (f64, !quake.ref) -> ()
+    quake.ry (%cst_0) %2 : (f64, !quake.ref) -> ()
+    quake.r1 (%cst) %2 : (f64, !quake.ref) -> ()
+    %3 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+    quake.rx (%cst_4) [%3] %1 : (f64, !quake.ref, !quake.ref) -> ()
+    quake.ry (%cst_3) [%3] %1 : (f64, !quake.ref, !quake.ref) -> ()
+    quake.rz (%cst_4) [%3] %1 : (f64, !quake.ref, !quake.ref) -> ()
+    quake.r1 (%cst_5) [%3] %1 : (f64, !quake.ref, !quake.ref) -> ()
+    %4 = quake.extract_ref %0[3] : (!quake.veq<4>) -> !quake.ref
+    quake.rx (%cst_2) [%4] %2 : (f64, !quake.ref, !quake.ref) -> ()
+    quake.rz (%cst_1) [%4] %2 : (f64, !quake.ref, !quake.ref) -> ()
+    quake.ry (%cst_0) [%4] %2 : (f64, !quake.ref, !quake.ref) -> ()
+    quake.r1 (%cst) [%4] %2 : (f64, !quake.ref, !quake.ref) -> ()
+    quake.rx (%cst_1) [%1] %2 : (f64, !quake.ref, !quake.ref) -> ()
+    quake.rx (%cst_1) [%2] %1 : (f64, !quake.ref, !quake.ref) -> ()
+    %measOut = quake.mz %0 : (!quake.veq<4>) -> !cc.stdvec<!quake.measure>
+    return
+  }
+}

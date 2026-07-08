@@ -159,6 +159,9 @@ std::unique_ptr<Pass> createR1R1ToR1Pass();
 
 /// 37 x
 std::unique_ptr<Pass> createU3U3ToU3Pass();
+
+/// 38
+std::unique_ptr<Pass> createSummarizeAnglePass();
 } // namespace mqss::opt
 
 // Declarative passes

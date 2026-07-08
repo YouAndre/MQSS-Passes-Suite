@@ -83,6 +83,9 @@ std::unique_ptr<Pass> createZeroRyToIdPass();
 /// 14
 std::unique_ptr<Pass> createZeroRzToIdPass();
 
+/// 15
+std::unique_ptr<Pass> createGeneralCancellationsPass();
+
 } // namespace mqss::opt
 
 // Declarative passes

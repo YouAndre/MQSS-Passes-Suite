@@ -220,3 +220,10 @@ def U3U3ToU3 : Pass<"U3U3ToU3"> {
   let summary = "Collapse 2 U3 rotations into a single U3";
   let constructor = "mqss::opt::createU3U3ToU3Pass()";
 }
+
+def SummarizeAngle : Pass<"SummarizeAngle"> {
+  let summary = "Collapse consecutive Rx, Ry, Rz and R1 rotations (and their "
+                "single-controlled variants) on the same target/control "
+                "into one normalized rotation";
+  let constructor = "mqss::opt::createSummarizeAnglePass()";
+}

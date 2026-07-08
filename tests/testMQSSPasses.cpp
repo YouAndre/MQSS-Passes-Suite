@@ -469,7 +469,44 @@ INSTANTIATE_TEST_SUITE_P(
       std::make_tuple(
         "NormalizeArgAnglePass", "./quake/NormalizeArgAnglePass.qke",
         "./golden-cases/NormalizeArgAnglePass.qke",
-        []() { return mqss::opt::createNormalizeArgAnglePass(); }, false)),
+        []() { return mqss::opt::createNormalizeArgAnglePass(); }, false),
+      std::make_tuple(
+        "SummarizeAnglePass", "./quake/SummarizeAnglePass.qke",
+        "./golden-cases/SummarizeAnglePass.qke",
+        []() { return mqss::opt::createSummarizeAnglePass(); }, false),
+      std::make_tuple(
+        "GeneralCancellationsXXToIdPass", "./quake/XXToIdPass.qke",
+        "./golden-cases/XXToIdPass.qke",
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false),
+      std::make_tuple(
+        "GeneralCancellationsYYToIdPass", "./quake/YYToIdPass.qke",
+        "./golden-cases/YYToIdPass.qke",
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false),
+      std::make_tuple(
+        "GeneralCancellationsZZToIdPass", "./quake/ZZToIdPass.qke",
+        "./golden-cases/ZZToIdPass.qke",
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false),
+      std::make_tuple(
+        "GeneralCancellationsCxCxToIdPass", "./quake/CxCxToIdPass.qke",
+        "./golden-cases/CxCxToIdPass.qke",
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false),
+      std::make_tuple(
+        "GeneralCancellationsZeroRxToIdPass", "./quake/ZeroRxToIdPass.qke",
+        "./golden-cases/ZeroRxToIdPass.qke",
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false),
+      std::make_tuple(
+        "GeneralCancellationsZeroRyToIdPass", "./quake/ZeroRyToIdPass.qke",
+        "./golden-cases/ZeroRyToIdPass.qke",
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false),
+      std::make_tuple(
+        "GeneralCancellationsZeroRzToIdPass", "./quake/ZeroRzToIdPass.qke",
+        "./golden-cases/ZeroRzToIdPass.qke",
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false),
+      std::make_tuple(
+        "GeneralCancellationsFinalPass",
+        "./quake/GeneralCancellationsPass.qke",
+        "./golden-cases/GeneralCancellationsPass.qke",
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false)),
     [](const ::testing::TestParamInfo<BehaviouralTestPassesMQSS::ParamType>
       &info) {
     // Use the first element of the tuple (testName) as the custom test name
