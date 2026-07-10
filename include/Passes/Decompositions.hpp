@@ -123,7 +123,7 @@ std::unique_ptr<Pass> createCryToRzCrxRzPass();
 /// 30 x
 std::unique_ptr<Pass> createCrzToRzCxRzCxPass();
 /// 31 x
-std::unique_ptr<Pass> createCrzToCu3Pass();
+std::unique_ptr<Pass> createCrzToRzCu3Pass();
 /// 32 x
 std::unique_ptr<Pass> createU2ToU3Pass();
 /// 33 x

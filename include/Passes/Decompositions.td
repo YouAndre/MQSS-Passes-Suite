@@ -160,6 +160,14 @@ def CrzToRzCxRzCx : Pass<"CrzToRzCxRzCx"> {
   let summary = "Decomposition pass of Crz into Rz-CX-Rz-CX sequence";
   let constructor = "mqss::opt::createCrzToRzCxRzCxPass()";
 }
+
+def CrzToRzCu3 : Pass<"CrzToRzCu3"> {
+  let summary = "Decomposition pass of Crz into an Rz phase correction on "
+                "the control qubit followed by a controlled U3 gate, "
+                "preserving the relative phase";
+  let constructor = "mqss::opt::createCrzToRzCu3Pass()";
+}
+
 def U2ToU3 : Pass<"U2ToU3"> {
   let summary = "Decomposition pass of U2 into U3";
   let constructor = "mqss::opt::createU2ToU3Pass()";
