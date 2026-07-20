@@ -506,7 +506,42 @@ INSTANTIATE_TEST_SUITE_P(
         "GeneralCancellationsFinalPass",
         "./quake/GeneralCancellationsPass.qke",
         "./golden-cases/GeneralCancellationsPass.qke",
-        []() { return mqss::opt::createGeneralCancellationsPass(); }, false)),
+        []() { return mqss::opt::createGeneralCancellationsPass(); }, false),
+      std::make_tuple(
+        "LegalizeToNativeGateSetCaseA", "./quake/Legalize3Qubit.qke",
+        "./golden-cases/Legalize3QubitCaseA.qke",
+        []() {
+          return mqss::opt::createLegalizeToNativeGateSetPass(
+              {"r1", "u2", "u3", "cx"});
+        }, false),
+      std::make_tuple(
+        "LegalizeToNativeGateSetCaseB", "./quake/Legalize3Qubit.qke",
+        "./golden-cases/Legalize3QubitCaseB.qke",
+        []() {
+          return mqss::opt::createLegalizeToNativeGateSetPass(
+              {"rz", "x", "cx"});
+        }, false),
+      std::make_tuple(
+        "LegalizeToNativeGateSetCaseCUnreachable",
+        "./quake/Legalize3Qubit.qke",
+        "./golden-cases/Legalize3QubitCaseC.qke",
+        []() {
+          return mqss::opt::createLegalizeToNativeGateSetPass({"h"});
+        }, false),
+      std::make_tuple(
+        "LegalizeToNativeGateSetSwapCaseA", "./quake/LegalizeSwapCircuit.qke",
+        "./golden-cases/LegalizeSwapCircuitCaseA.qke",
+        []() {
+          return mqss::opt::createLegalizeToNativeGateSetPass(
+              {"h", "rx", "cx"});
+        }, false),
+      std::make_tuple(
+        "LegalizeToNativeGateSetSwapCaseBUnreachable",
+        "./quake/LegalizeSwapCircuit.qke",
+        "./golden-cases/LegalizeSwapCircuitCaseBUnreachable.qke",
+        []() {
+          return mqss::opt::createLegalizeToNativeGateSetPass({"h"});
+        }, false)),
     [](const ::testing::TestParamInfo<BehaviouralTestPassesMQSS::ParamType>
       &info) {
     // Use the first element of the tuple (testName) as the custom test name

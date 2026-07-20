@@ -51,3 +51,4 @@ git-emoji-commit.sh
 
 # Local session/handoff notes, not project docs
 SESSION_CONTEXT.md
+.cache/

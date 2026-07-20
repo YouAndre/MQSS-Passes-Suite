@@ -32,7 +32,9 @@ SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #pragma once
 
+#include "llvm/ADT/ArrayRef.h"
 #include "mlir/Pass/Pass.h"
+#include <string>
 
 /**
  * @def CUDAQ_PREFIX_FUNCTION
@@ -129,6 +131,12 @@ std::unique_ptr<Pass> createU2ToU3Pass();
 /// 33 x
 std::unique_ptr<Pass> createTdgToRzPass();
 
+/// 34
+std::unique_ptr<Pass>
+createLegalizeToNativeGateSetPass(llvm::ArrayRef<std::string> native_gate_set = {});
+
+/// 35
+std::unique_ptr<Pass> createHToU3Pass();
 
 } // namespace mqss::opt
 

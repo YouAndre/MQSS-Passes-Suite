@@ -43,7 +43,7 @@ public:
       Location loc = cyOp.getLoc();
       rewriter.setInsertionPointAfter(cyOp);
       rewriter.create<quake::SOp>(loc, target);
-      rewriter.create<quake::XOp>(loc, target, control);
+      rewriter.create<quake::XOp>(loc, control, target);
       rewriter.create<quake::SOp>(loc, true,target);
       rewriter.eraseOp(cyOp);
       this->wasApplied->store(true);

@@ -176,3 +176,17 @@ def TdgToRz : Pass<"TdgToRz"> {
   let summary = "Decomposition pass of Tdg into Rz";
   let constructor = "mqss::opt::createTdgToRzPass()";
 }
+
+def HToU3 : Pass<"HToU3"> {
+  let summary = "Decomposition pass that replaces H by U3(pi/2, 0, pi)";
+  let constructor = "mqss::opt::createHToU3Pass()";
+}
+
+def LegalizeToNativeGateSet : Pass<"LegalizeToNativeGateSet"> {
+  let summary = "Quick-and-dirty legalization pass that repeatedly applies "
+                "the rewrite rules of the individual Decomposition passes "
+                "to every gate that is not a member of a given native gate "
+                "set, until only native gates remain (or no further "
+                "progress can be made)";
+  let constructor = "mqss::opt::createLegalizeToNativeGateSetPass()";
+}

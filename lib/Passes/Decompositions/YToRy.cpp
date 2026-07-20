@@ -22,7 +22,7 @@ class YToRy final : public BaseMQSSPass<YToRy>, public AppliedCheckPass {
 public:
   MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(YToRy)
 
-  StringRef getArgument() const override { return "XToRx"; }
+  StringRef getArgument() const override { return "YToRy"; }
 
   StringRef getDescription() const override {
     return "Decomposition pass of Y by Ry";
