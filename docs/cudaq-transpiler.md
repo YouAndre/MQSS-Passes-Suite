@@ -1,0 +1,102 @@
+# CudaQ Transpiler
+
+<!-- IMPORTANT: Keep the line above as the first line. -->
+
+<!-- This file is a static page and included in the CMakeLists.txt file. -->
+
+**CudaQ** offers also a transpiler infrastructure that is used by `nvq++` quantum compiler.
+Transpilation can also be handled using MLIR passes as follows:
+
+First, extract the MLIR context and define an MLIR `PassManager` as follows:
+
+```cpp
+auto [mlirModule, contextPtr] = extractMLIRContext(quakeModule);
+mlir::MLIRContext &context = *contextPtr;
+// creating pass manager
+mlir::PassManager pm(&context);
+```
+
+Next, define a `BasisConversionPassOptions` object and pass to it a list of gates to be considered
+as the native gate set. The transpiler will use the defined native gate set to try to apply
+decomposition passes. For instance, the following native gate set
+`{"h",  "s", "t", "rx", "ry", "rz", "x", "y", "z",  "x(1)"}` is specified.
+
+```cpp
+cudaq::opt::BasisConversionPassOptions options;
+options.basis = {"h",  "s", "t", "rx", "ry", "rz", "x", "y", "z", "x(1)"};
+```
+
+Next, add a `cudaq::opt::createBasisConversionPass` to the pass manager. Do not forget to pass
+`options` as input parameter of `cudaq::opt::createDecompositionPass`, as follows:
+
+```cpp
+pm.addPass(createBasisConversionPass(options));
+```
+
+Finally, you can dump and visualize the effects of running the transpiler on your MLIR module as
+follows:
+
+```cpp
+// running the pass
+if(mlir::failed(pm.run(mlirModule)))
+  std::runtime_error("The pass failed...");
+// if pass is applied successfully ...
+std::cout << "Circuit after pass:\n";
+mlirModule->dump();
+```
+
+The following circuit will be used as a test case. The following section shows the transpiled
+circuit for **IQM**.
+
+<!--circuit obtained for **IQM, AQT, PlanQ and WMI** backends.-->
+
+<div align="center">
+  <img  alt="Input" src="Input.png" width=75%>
+</div>
+<!--
+## AQT
+
+The AQT backend supports the following gates:
+`"x", "y", "z", "h", "s", "t", "rx", "ry", "rz", "x(1)", "z(1)", "swap"`.
+
+![AQT](AQTTranspilation.png)
+
+## WMI
+
+The WMI backend supports the following gates:
+`"rx", "ry", "rz", "h", "phased_rx", "phased_ry", "phased_rz", "x(1)", "z(1)"`.
+
+<div align="center">
+  <img  alt="WMI" src="WMITranspilation.png" width=100%>
+</div>
+
+## PlanQ
+
+The WMI backend supports the following gates: `"rx", "ry", "rz", "x(1)", "z(1)"`.
+
+-->
+
+## IQM
+
+The IQM backend supports the following gates: `"phased_rx","z(1)"`. For the sake of clarity, just
+fragments of the transpiled circuit are shown.
+
+### 1)
+
+<div align="center">
+  <img  alt="Fragment 1" src="Transpiled-IQM1.png" width=100%>
+</div>
+
+### 2)
+
+<div align="center">
+  <img  alt="Fragment 2" src="Transpiled-IQM2.png" width=100%>
+</div>
+
+### ...
+
+### n)
+
+<div align="center">
+  <img  alt="Fragment 3" src="Transpiled-IQMn.png" width=100%>
+</div>

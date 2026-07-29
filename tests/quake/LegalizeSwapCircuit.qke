@@ -1,0 +1,12 @@
+func.func @__nvqpp__mlirgen__legalizeSwapCircuit() attributes {"cudaq-entrypoint", "cudaq-kernel"} {
+  %cst = arith.constant 7.000000e-01 : f64
+  %0 = quake.alloca !quake.veq<2>
+  %1 = quake.extract_ref %0[0] : (!quake.veq<2>) -> !quake.ref
+  %2 = quake.extract_ref %0[1] : (!quake.veq<2>) -> !quake.ref
+  quake.t %1 : (!quake.ref) -> ()
+  quake.rz (%cst) [%1] %2 : (f64, !quake.ref, !quake.ref) -> ()
+  quake.swap %1, %2 : (!quake.ref, !quake.ref) -> ()
+  quake.h %1 : (!quake.ref) -> ()
+  %measOut = quake.mz %0 : (!quake.veq<2>) -> !cc.stdvec<!quake.measure>
+  return
+}

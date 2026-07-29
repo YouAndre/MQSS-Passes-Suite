@@ -1,0 +1,99 @@
+func.func @__nvqpp__mlirgen__testSummarizeAngle() attributes {"cudaq-entrypoint", "cudaq-kernel"} {
+  %0 = quake.alloca !quake.veq<4>
+
+  // qubit1 (q0): rx(pi) rx(pi) ry(pi/4) ry(pi) rz(-pi) rz(pi) r1<adj>(2pi) r1(pi)
+  %1 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst = arith.constant 3.141592653589793 : f64
+  quake.rx (%cst) %1 : (f64, !quake.ref) -> ()
+  %cst_0 = arith.constant 3.141592653589793 : f64
+  quake.rx (%cst_0) %1 : (f64, !quake.ref) -> ()
+  %cst_1 = arith.constant 0.7853981633974483 : f64
+  quake.ry (%cst_1) %1 : (f64, !quake.ref) -> ()
+  %cst_2 = arith.constant 3.141592653589793 : f64
+  quake.ry (%cst_2) %1 : (f64, !quake.ref) -> ()
+  %cst_3 = arith.constant -3.141592653589793 : f64
+  quake.rz (%cst_3) %1 : (f64, !quake.ref) -> ()
+  %cst_4 = arith.constant 3.141592653589793 : f64
+  quake.rz (%cst_4) %1 : (f64, !quake.ref) -> ()
+  %cst_5 = arith.constant 6.283185307179586 : f64
+  quake.r1<adj> (%cst_5) %1 : (f64, !quake.ref) -> ()
+  %cst_6 = arith.constant 3.141592653589793 : f64
+  quake.r1 (%cst_6) %1 : (f64, !quake.ref) -> ()
+
+  // qubit2 (q1): rx(1.0) rz(0.5) ry(0.05) r1(3.0) -- different types back to back, none merge
+  %2 = quake.extract_ref %0[1] : (!quake.veq<4>) -> !quake.ref
+  %cst_7 = arith.constant 1.000000e+00 : f64
+  quake.rx (%cst_7) %2 : (f64, !quake.ref) -> ()
+  %cst_8 = arith.constant 5.000000e-01 : f64
+  quake.rz (%cst_8) %2 : (f64, !quake.ref) -> ()
+  %cst_9 = arith.constant 5.000000e-02 : f64
+  quake.ry (%cst_9) %2 : (f64, !quake.ref) -> ()
+  %cst_10 = arith.constant 3.000000e+00 : f64
+  quake.r1 (%cst_10) %2 : (f64, !quake.ref) -> ()
+
+  // Same qubit1 pattern, controlled by ancilla q2
+  %3 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+  %4 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_11 = arith.constant 3.141592653589793 : f64
+  quake.rx (%cst_11) [%3] %4 : (f64, !quake.ref, !quake.ref) -> ()
+  %5 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+  %6 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_12 = arith.constant 3.141592653589793 : f64
+  quake.rx (%cst_12) [%5] %6 : (f64, !quake.ref, !quake.ref) -> ()
+  %7 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+  %8 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_13 = arith.constant 0.7853981633974483 : f64
+  quake.ry (%cst_13) [%7] %8 : (f64, !quake.ref, !quake.ref) -> ()
+  %9 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+  %10 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_14 = arith.constant 3.141592653589793 : f64
+  quake.ry (%cst_14) [%9] %10 : (f64, !quake.ref, !quake.ref) -> ()
+  %11 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+  %12 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_15 = arith.constant -3.141592653589793 : f64
+  quake.rz (%cst_15) [%11] %12 : (f64, !quake.ref, !quake.ref) -> ()
+  %13 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+  %14 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_16 = arith.constant 3.141592653589793 : f64
+  quake.rz (%cst_16) [%13] %14 : (f64, !quake.ref, !quake.ref) -> ()
+  %15 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+  %16 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_17 = arith.constant 6.283185307179586 : f64
+  quake.r1<adj> (%cst_17) [%15] %16 : (f64, !quake.ref, !quake.ref) -> ()
+  %17 = quake.extract_ref %0[2] : (!quake.veq<4>) -> !quake.ref
+  %18 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_18 = arith.constant 3.141592653589793 : f64
+  quake.r1 (%cst_18) [%17] %18 : (f64, !quake.ref, !quake.ref) -> ()
+
+  // Same qubit2 pattern, controlled by ancilla q3 -- none merge
+  %19 = quake.extract_ref %0[3] : (!quake.veq<4>) -> !quake.ref
+  %20 = quake.extract_ref %0[1] : (!quake.veq<4>) -> !quake.ref
+  %cst_19 = arith.constant 1.000000e+00 : f64
+  quake.rx (%cst_19) [%19] %20 : (f64, !quake.ref, !quake.ref) -> ()
+  %21 = quake.extract_ref %0[3] : (!quake.veq<4>) -> !quake.ref
+  %22 = quake.extract_ref %0[1] : (!quake.veq<4>) -> !quake.ref
+  %cst_20 = arith.constant 5.000000e-01 : f64
+  quake.rz (%cst_20) [%21] %22 : (f64, !quake.ref, !quake.ref) -> ()
+  %23 = quake.extract_ref %0[3] : (!quake.veq<4>) -> !quake.ref
+  %24 = quake.extract_ref %0[1] : (!quake.veq<4>) -> !quake.ref
+  %cst_21 = arith.constant 5.000000e-02 : f64
+  quake.ry (%cst_21) [%23] %24 : (f64, !quake.ref, !quake.ref) -> ()
+  %25 = quake.extract_ref %0[3] : (!quake.veq<4>) -> !quake.ref
+  %26 = quake.extract_ref %0[1] : (!quake.veq<4>) -> !quake.ref
+  %cst_22 = arith.constant 3.000000e+00 : f64
+  quake.r1 (%cst_22) [%25] %26 : (f64, !quake.ref, !quake.ref) -> ()
+
+  // crx(qubit1, qubit2, 0.5) then crx(qubit2, qubit1, 0.5): same two qubits,
+  // swapped control/target roles -- must NOT merge.
+  %27 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %28 = quake.extract_ref %0[1] : (!quake.veq<4>) -> !quake.ref
+  %cst_23 = arith.constant 5.000000e-01 : f64
+  quake.rx (%cst_23) [%27] %28 : (f64, !quake.ref, !quake.ref) -> ()
+  %29 = quake.extract_ref %0[1] : (!quake.veq<4>) -> !quake.ref
+  %30 = quake.extract_ref %0[0] : (!quake.veq<4>) -> !quake.ref
+  %cst_24 = arith.constant 5.000000e-01 : f64
+  quake.rx (%cst_24) [%29] %30 : (f64, !quake.ref, !quake.ref) -> ()
+
+  %measOut = quake.mz %0 : (!quake.veq<4>) -> !cc.stdvec<!quake.measure>
+  return
+}

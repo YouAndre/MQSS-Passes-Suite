@@ -1,0 +1,54 @@
+func.func @__nvqpp__mlirgen__testGeneralCancellations() attributes {"cudaq-entrypoint", "cudaq-kernel"} {
+  %0 = quake.alloca !quake.veq<6>
+
+  // qubit1: S Sdg S T Tdg T -- (S,Sdg) cancel, leftover S stays;
+  // (T,Tdg) cancel, leftover T stays. Expect: S, T remain.
+  %1 = quake.extract_ref %0[0] : (!quake.veq<6>) -> !quake.ref
+  quake.s %1 : (!quake.ref) -> ()
+  quake.s<adj> %1 : (!quake.ref) -> ()
+  quake.s %1 : (!quake.ref) -> ()
+  quake.t %1 : (!quake.ref) -> ()
+  quake.t<adj> %1 : (!quake.ref) -> ()
+  quake.t %1 : (!quake.ref) -> ()
+
+  // qubit2: Tdg Tdg S S -- same adjoint flag each time, must NOT cancel.
+  // Expect: Tdg, Tdg, S, S all remain.
+  %2 = quake.extract_ref %0[1] : (!quake.veq<6>) -> !quake.ref
+  quake.t<adj> %2 : (!quake.ref) -> ()
+  quake.t<adj> %2 : (!quake.ref) -> ()
+  quake.s %2 : (!quake.ref) -> ()
+  quake.s %2 : (!quake.ref) -> ()
+
+  // qubit3/qubit4: CS[q3]->q4, CSdg[q3]->q4 (matching control, cancels),
+  // then CS[q3]->q4, CSdg[q4]->q3 (roles swapped, must NOT cancel).
+  %3 = quake.extract_ref %0[2] : (!quake.veq<6>) -> !quake.ref
+  %4 = quake.extract_ref %0[3] : (!quake.veq<6>) -> !quake.ref
+  quake.s [%3] %4 : (!quake.ref, !quake.ref) -> ()
+  %5 = quake.extract_ref %0[2] : (!quake.veq<6>) -> !quake.ref
+  %6 = quake.extract_ref %0[3] : (!quake.veq<6>) -> !quake.ref
+  quake.s<adj> [%5] %6 : (!quake.ref, !quake.ref) -> ()
+  %7 = quake.extract_ref %0[2] : (!quake.veq<6>) -> !quake.ref
+  %8 = quake.extract_ref %0[3] : (!quake.veq<6>) -> !quake.ref
+  quake.s [%7] %8 : (!quake.ref, !quake.ref) -> ()
+  %9 = quake.extract_ref %0[3] : (!quake.veq<6>) -> !quake.ref
+  %10 = quake.extract_ref %0[2] : (!quake.veq<6>) -> !quake.ref
+  quake.s<adj> [%9] %10 : (!quake.ref, !quake.ref) -> ()
+
+  // qubit5/qubit6: CR1(0) and CR1(2*pi - 1e-7) both close enough to cancel,
+  // CR1(2*pi + 1e-3) too far off to cancel.
+  %11 = quake.extract_ref %0[4] : (!quake.veq<6>) -> !quake.ref
+  %12 = quake.extract_ref %0[5] : (!quake.veq<6>) -> !quake.ref
+  %cst = arith.constant 0.000000e+00 : f64
+  quake.r1 (%cst) [%11] %12 : (f64, !quake.ref, !quake.ref) -> ()
+  %13 = quake.extract_ref %0[4] : (!quake.veq<6>) -> !quake.ref
+  %14 = quake.extract_ref %0[5] : (!quake.veq<6>) -> !quake.ref
+  %cst_0 = arith.constant 6.283185207179586 : f64
+  quake.r1 (%cst_0) [%13] %14 : (f64, !quake.ref, !quake.ref) -> ()
+  %15 = quake.extract_ref %0[4] : (!quake.veq<6>) -> !quake.ref
+  %16 = quake.extract_ref %0[5] : (!quake.veq<6>) -> !quake.ref
+  %cst_1 = arith.constant 6.284185307179586 : f64
+  quake.r1 (%cst_1) [%15] %16 : (f64, !quake.ref, !quake.ref) -> ()
+
+  %measOut = quake.mz %0 : (!quake.veq<6>) -> !cc.stdvec<!quake.measure>
+  return
+}

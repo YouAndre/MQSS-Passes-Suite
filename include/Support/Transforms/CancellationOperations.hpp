@@ -1,0 +1,137 @@
+
+
+/** @file
+    @brief
+    @details Definition of the cancellation operation at MLIR level. Given a
+   pattern specified by the template, the function will find the pattern and
+   remove it from a given mlir module.
+    @par
+    This header must be included to use the pattern cancellation into a pass.
+*/
+
+#pragma once
+
+#include "Support/mlir_utils.hpp"
+#include "mlir/Dialect/SCF/IR/SCF.h"
+#include "mlir/Rewrite/FrozenRewritePatternSet.h"
+#include "mlir/Transforms/DialectConversion.h"
+
+#include "llvm/Support/Casting.h"
+#include "llvm/Support/raw_ostream.h"
+
+#include <cmath>
+#include <numbers>
+
+using namespace mlir;
+using namespace mqss::support::quakeDialect;
+
+namespace mqss::support::transforms {
+    inline bool isMultipleOfTwoPi(double angle) {
+        constexpr double pi = std::numbers::pi;
+        constexpr double doublePi = 2 * pi;
+        constexpr double epsilon = 1e-6;
+        double remainder = std::fmod(angle, doublePi);
+        if (remainder < 0) {
+            remainder += doublePi;
+        }
+        // remainder is now in [0, doublePi). Check distance to the nearest
+        // multiple of 2*pi, i.e. to either 0 or doublePi, not just to 0.
+        return remainder < epsilon || (doublePi - remainder) < epsilon;
+    }
+
+    /**
+     * @brief Function that removes (cancel) a pattern of two quantum operations
+     * under specific constraints.
+     * @details This function examines the current operation and tries to cancel two
+     * operations based on the number of control and target qubits they involve.
+     *
+     * @tparam T1 is the type of the first operation (e.g., a specific MLIR Op
+     * class).
+     * @tparam T2 is the type of the second operation.
+     * @param[in] currentOp pointer to the current MLIR operation being analyzed.
+     * @param[in] nCtrlsOp1 number of control qubits in the first operation.
+     * @param[in] nTgtsOp1 number of target qubits in the first operation.
+     * @param[in] nCtrlsOp2 number of control qubits in the second operation.
+     * @param[in] nTgtsOp2 number of target qubits in the second operation.
+     */
+    template<typename T1, typename T2>
+    void patternCancellation(Operation *currentOp, int nCtrlsOp1,
+                             int nTgtsOp1, int nCtrlsOp2, int nTgtsOp2) {
+        auto currentGate = dyn_cast_or_null<T2>(*currentOp);
+        if (!currentGate) {
+            return;
+        }
+        // check that the current gate is compliant with the number of controls and
+        // targets
+        if (currentGate.getControls().size() != nCtrlsOp2 ||
+            currentGate.getTargets().size() != nTgtsOp2) {
+            return;
+        }
+        // get the previous operation to check the swap pattern
+        auto prevOp =
+                getPreviousOperationOnTarget(currentGate, currentGate.getTargets()[0]);
+        if (!prevOp) {
+            return;
+        }
+        auto previousGate = dyn_cast_or_null<T1>(prevOp);
+        if (!previousGate) {
+            return;
+        }
+        // check that the previous gate is compliant with the number of controls and
+        // targets
+        if (previousGate.getControls().size() != nCtrlsOp1 ||
+            previousGate.getTargets().size() != nTgtsOp1) {
+            return;
+        }
+        // check that targets and controls are the same!
+        // At the moment I am checking all controls and all targets!
+        if (currentGate.getControls().size() == previousGate.getControls().size()) {
+            std::vector<int> controlsCurr =
+                    getIndicesOfValueRange(currentGate.getControls());
+            std::vector<int> controlsPrev =
+                    getIndicesOfValueRange(previousGate.getControls());
+            // sort both arrays
+            std::ranges::sort(controlsCurr, std::greater<int>());
+            std::ranges::sort(controlsPrev, std::greater<int>());
+            // compare both arrays
+            if (!std::equal(controlsCurr.begin(), controlsCurr.end(),
+                            controlsPrev.begin())) {
+                return;
+            }
+        } else {
+            return;
+        }
+        // so far, controls are the same, now check the targets
+        if (currentGate.getTargets().size() == previousGate.getTargets().size()) {
+            std::vector<int> targetsCurr =
+                    getIndicesOfValueRange(currentGate.getTargets());
+            std::vector<int> targetsPrev =
+                    getIndicesOfValueRange(previousGate.getTargets());
+            // sort both arrays
+            std::ranges::sort(targetsCurr, std::greater<int>());
+            std::ranges::sort(targetsPrev, std::greater<int>());
+            // compare both arrays
+            if (!std::equal(
+                targetsCurr.begin(),
+                targetsCurr.end(),
+                targetsPrev.begin())) {
+                return;
+            }
+        } else {
+            return;
+        }
+#ifdef DEBUG
+        llvm::outs() << "Current Operation: ";
+        currentGate->print(llvm::outs());
+        llvm::outs() << "\n";
+        llvm::outs() << "Previous Operation: ";
+        previousGate->print(llvm::outs());
+        llvm::outs() << "\n";
+#endif
+        // At this point, I should de able to remove the pattern
+        IRRewriter rewriter(currentGate->getContext());
+        // Erase the operations
+        rewriter.eraseOp(currentGate);
+        rewriter.eraseOp(previousGate);
+    }
+} // namespace mqss::support::transforms
