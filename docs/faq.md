@@ -74,24 +74,6 @@ MLIR has two categories of passes: **transformation** passes and **analysis** pa
 presented above is a transformation pass. Moreover, passes can be applied in sequences defined as
 **pass pipelines**.
 
-<div align="center">
-    <img src="mlir-passes.png" width="100%">
-</div>
-
-In the figure shown above, three pass pipelines are defined. In purple, a synthesis to QUAKE
-pipeline synthesizes QUAKE MLIRcode from a given input C++ program. In green, an optimization
-pipeline that applies a series of transformations passes on MLIR modules. Finally, in orange, a pass
-pipeline that lowers QUAKE MLIR modules to the Quantum Intermediate Representation (QIR).
-
-The compiler converts the high-level HPCQC application to MLIR and forwards the quantum circuits to
-the QRM. Then, the QRM represents the quantum circuits as quantum kernels using the MLIR dialect
-Quake (see purple blocks). Optimization involves applying a pipeline of target-agnostic and
-target-specific passes that transform the input quantum circuit into an optimized version (see green
-blocks) that is compliant with the target device. Finally, the optimized MLIR/Quake circuit is
-lowered to a program with instructions accepted by the selected target backend (see orange blocks).
-In this example, the optimized MLIR code is lowered to QIR. Note that the code presented here is not
-functional and is only for illustrative purposes.
-
 ### Why include MLIR into the Stack?
 
 One fundamental feature of MLIR is its ability to model different levels of abstraction related to a

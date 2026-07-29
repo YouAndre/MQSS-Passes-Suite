@@ -12,9 +12,6 @@
 
 \snippet{doc} README.md DOXYGEN MAIN
 
-<div align="center">
-  <img class="mlir-passes" alt="MLIR passes" src="mlir-passes.png" width=100%>
-</div>
 ### How to Use this Documentation?
 
 This documentation provides helpful information to get you started with the collection of MLIR

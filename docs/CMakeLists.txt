@@ -55,9 +55,6 @@ set(DOXYGEN_CONFIG_FILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 # also see the occurrences of @AWESOME_CSS_DIR@ in the Doxyfile.in.
 FetchContent_GetProperties(doxygen-awesome-css SOURCE_DIR AWESOME_CSS_DIR)
 
-# Copy over images that are not automatically copied by Doxygen.
-file(COPY _static/mlir-passes.png
-     DESTINATION ${DOXYGEN_OUTPUT_DIR}/html)
 # Copy images to be shown in the FAQ
 file(GLOB IMG_FILES "_static/*.png")
 
